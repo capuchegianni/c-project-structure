@@ -1,0 +1,8 @@
+.cache
+.git
+compile_commands.json
+*.log
+a.out
+*.o
+*.a
+test
