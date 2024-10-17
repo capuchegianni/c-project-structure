@@ -14,11 +14,18 @@ YELLOW = 93m
 BLUE = 94m
 
 SRC	:= 	main.c	\
-		print_multiple_args.c
+		print_multiple_args.c	\
+		error_handling.c
+
+TESTS_SRC :=	print_multiple_args.c	\
+				error_handling.c	\
+				tests/test.c
 
 OBJ	:= $(SRC:.c=.o)
 
 NAME :=	test
+
+TEST_NAME := unit_tests
 
 LIB_FLAGS := -I./include -L./lib/my -lmy
 
@@ -45,15 +52,21 @@ lib/my/libmy.a: build_lib
 
 clean:
 	rm -f $(OBJ)
+	rm -f *.gcda
+	rm -f *.gcno
 	make -sC ./lib/my clean
 	@echo "[ $(BOLD)$(BLUE)OK$(END) ] $(DEFAULT)$(RED)removed .o files$(END)"
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(TEST_NAME)
 	rm -f *.log
 	make -sC ./lib/my fclean
 	@echo "[ $(BOLD)$(BLUE)OK$(END) ] $(DEFAULT)$(RED)removed $(NAME)$(END)"
 
 re: fclean all
+
+tests_run:
+	gcc -o $(TEST_NAME) $(TESTS_SRC) --coverage -lcriterion $(LIB_FLAGS)
 
 .PHONY: all clean fclean re
